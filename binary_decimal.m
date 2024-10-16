@@ -1,4 +1,4 @@
-function [value] = bin2dec(bin2_8)
+function [value] = binary_decimal(bin2_8)
 
 value = 0;
 len = length(bin2_8);

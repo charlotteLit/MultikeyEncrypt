@@ -54,7 +54,7 @@ for i = 2:m
     begin_x = (i-1) * bs;
     x_range = begin_x+1:begin_x+bs;
     for j = 2:n
-        ed = bin2dec([0, 0, 0, D(d+1:d+5)]) + 1;
+        ed = binary_decimal([0, 0, 0, D(d+1:d+5)]) + 1;
         d = d + 5;
         emd_data(emd+1:emd+5) = D(d+1:d+5);
         emd = emd + 5;
@@ -170,7 +170,41 @@ end % end of index
 % 两组对照相加取最小值对应块
 sum_block = sum_block_l + sum_block_r;
 [value,index]=min(sum_block,[],1);
+index = squeeze(index);
+
+% 根据最小值，得到用于解密的decrypt_mask
+decry = zeros(row, col*2);
+for i=2:m
+    begin_x = (i-1) * bs;
+    x_range = begin_x+1:begin_x+bs;
+    for j = 2:n
+        begin_y = (j-1) * bs;
+        begin_y1 = begin_y + col;
+        y_range = begin_y+1:begin_y+bs;
+        y1_range = begin_y1+1:begin_y1+bs; 
+        ind = index(i,j);
+        key = squeeze(rand_seq(ind,:,:));
+        decry(x_range,y_range) = key(x_range,y_range);
+        decry(x_range,y1_range)= key(x_range,y1_range);
+    end
+end
 
 
+recover_I = encrypt_I;
+% 复原中间图像
+recover_I = arrayfun(@bitxor,recover_I,decry);
+% 复原边缘区域
+% 先恢复第一行第一列
+key = squeeze(rand_seq(1,:,:));
+recover_I(1:bs,:) = decrypt_I(1:bs,:);
+recover_I(bs+1:510,1:bs) = decrypt_I(bs+1:510,1:bs);
+% 中间列，最后列，最后行
+recover_I(bs+1:510,511:515) = decrypt_I(bs+1:510,511:515);
+recover_I(bs+1:510,end-2:end) = decrypt_I(bs+1:510,end-2:end);
+recover_I(510:512,bs+1:end) = decrypt_I(510:512,bs+1:end);
 
+figure(3);
+imshow(recover_I,[]);
+title('解密图像');
 
+% 计算MSE均方误差，错误率，正确率

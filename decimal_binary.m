@@ -1,4 +1,4 @@
-function [bin2_8] = dec2bin(value)
+function [bin2_8] = decimal_binary(value)
 
 bin2_8 = dec2bin(value)-'0';
 if length(bin2_8) < 8
