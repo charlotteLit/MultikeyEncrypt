@@ -1,6 +1,10 @@
 %% 准备原始图像，分两幅
+
+clc
+clear
+
 I = imread('./测试图像/Lena.tiff');
-% origin_I = double(I);
+origin_I = double(I);
 
 inter_I = origin_I(1:510,1:510);
 [row,col] = size(inter_I);
@@ -218,11 +222,12 @@ recover_single = recover_I(:,1:col);
 
 %% 计算MSE均方误差，错误率，正确率
 pixel = row*col;
-dif=arrayfun(@minus,int16(origin_I),int16(recover_single));
+dif=arrayfun(@minus,int16(inter_I),int16(recover_single));
 d_dif=double(dif);
 squ_dif=power(d_dif,2);
 sum_dif=sum(squ_dif(:));
 MSE=sum_dif/pixel;
+PSNR=10*log10((255^2)/MSE);
 
 index_error=find(dif(:)~=0);
 count=length(index_error);
