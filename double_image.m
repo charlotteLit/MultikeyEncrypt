@@ -1,11 +1,15 @@
+%% 准备原始图像，分两幅
 I = imread('./测试图像/Lena.tiff');
-origin_I = double(I);
-[row,col] = size(origin_I);
+% origin_I = double(I);
 
-double_I = [origin_I, origin_I];
+inter_I = origin_I(1:510,1:510);
+[row,col] = size(inter_I);
+
+double_I = [inter_I, inter_I];
 figure(1);
 imshow(double_I,[]);
 title('拼接图像');
+%% 图像加密
 
 % 分块大小
 bs = 3;
@@ -21,7 +25,7 @@ D = round(rand(1,num_D)*1);
 
 % 生成2^b个随机序列，大小为两幅图片水平排列
 % 每块嵌入5 bit数据
-b = 5;
+b = 10;
 rand_num = 2^b;
 rng(b);
 rand_seq = floor(rand(rand_num, row, col*2) * 255);
@@ -40,11 +44,13 @@ key = squeeze(rand_seq(1,:,:));
 
 % 第一行第一列
 mask(1:bs,:) = key(1:bs,:);
-mask(bs+1:end,1:bs) = key(bs+1:end,1:bs);
-% 中间列，最后列，最后行
-mask(bs+1:510,511:515) = key(bs+1:510,511:515);
-mask(bs+1:510,end-2:end) = key(bs+1:510,end-2:end);
-mask(510:512,bs+1:end) = key(510:512,bs+1:end);
+mask(bs+1:row,1:bs) = key(bs+1:row,1:bs);
+% 中间列
+mask(bs+1:row,col+1:col+bs) = key(bs+1:510,col+1:col+bs);
+
+% 最后列，最后行
+% mask(bs+1:510,end-2:end) = key(bs+1:510,end-2:end);
+% mask(510:512,bs+1:end) = key(510:512,bs+1:end);
 
 emd_data = zeros();
 emd = 0;
@@ -75,18 +81,18 @@ encrypt_I = arrayfun(@bitxor,encrypt_I,mask);
 figure(2);
 imshow(encrypt_I,[]);
 title('加密图像2');
-
-% 数据提取 & 复原图像
+%% 数据提取 & 复原图像
 
 decrypt_I = encrypt_I;
 % 先恢复第一行第一列
 key = squeeze(rand_seq(1,:,:));
 decrypt_I(1:bs,:) = bitxor(decrypt_I(1:bs,:), key(1:bs,:));
-decrypt_I(bs+1:510,1:bs) = bitxor(decrypt_I(bs+1:510,1:bs),key(bs+1:510,1:bs));
-% 中间列，最后列，最后行
-decrypt_I(bs+1:510,511:515) = bitxor(decrypt_I(bs+1:510,511:515),key(bs+1:510,511:515));
-decrypt_I(bs+1:510,end-2:end) = bitxor(decrypt_I(bs+1:510,end-2:end),key(bs+1:510,end-2:end));
-decrypt_I(510:512,bs+1:end) = bitxor(decrypt_I(510:512,bs+1:end),key(510:512,bs+1:end));
+decrypt_I(bs+1:row,1:bs) = bitxor(decrypt_I(bs+1:row,1:bs),key(bs+1:row,1:bs));
+% 中间列
+decrypt_I(bs+1:row,col+1:col+bs) = bitxor(decrypt_I(bs+1:row,col+1:col+bs),key(bs+1:row,col+1:col+bs));
+% 最后列，最后行
+% decrypt_I(bs+1:510,end-2:end) = bitxor(decrypt_I(bs+1:510,end-2:end),key(bs+1:510,end-2:end));
+% decrypt_I(510:512,bs+1:end) = bitxor(decrypt_I(510:512,bs+1:end),key(510:512,bs+1:end));
 
 % 将所有密钥依次与加密图像异或，得到rand_num*row*(col*2)大小的矩阵
 multi_encrypt=permute(repmat(encrypt_I,1,1,rand_num),[3,1,2]);
@@ -96,11 +102,11 @@ xor_array=arrayfun(@bitxor,multi_encrypt,rand_seq);
 for i=1:rand_num
     % 第一行第一列中间列
     xor_array(i,1:bs,:) = decrypt_I(1:bs,:);
-    xor_array(i,bs+1:end,1:bs) = decrypt_I(bs+1:end,1:bs);
-    xor_array(i,bs+1:510,511:515) = decrypt_I(bs+1:510,511:515);
+    xor_array(i,bs+1:row,1:bs) = decrypt_I(bs+1:row,1:bs);
+    xor_array(i,bs+1:row,col+1:col+bs) = decrypt_I(bs+1:row,col+1:col+bs);
 end
 
-% 现在xor_array中第一行第一列已解密，其余未解密，寻找最小f
+% 现在xor_array中第一行第一列中间列已解密，其余未解密，寻找最小f
 sum_block_l = zeros(rand_num,m,n);
 sum_block_r = zeros(rand_num,m,n);
 for index = 1:rand_num
@@ -197,14 +203,28 @@ recover_I = arrayfun(@bitxor,recover_I,decry);
 % 先恢复第一行第一列
 key = squeeze(rand_seq(1,:,:));
 recover_I(1:bs,:) = decrypt_I(1:bs,:);
-recover_I(bs+1:510,1:bs) = decrypt_I(bs+1:510,1:bs);
-% 中间列，最后列，最后行
-recover_I(bs+1:510,511:515) = decrypt_I(bs+1:510,511:515);
-recover_I(bs+1:510,end-2:end) = decrypt_I(bs+1:510,end-2:end);
-recover_I(510:512,bs+1:end) = decrypt_I(510:512,bs+1:end);
+recover_I(bs+1:row,1:bs) = decrypt_I(bs+1:row,1:bs);
+% 中间列
+recover_I(bs+1:row,col+1:col+bs) = decrypt_I(bs+1:row,col+1:col+bs);
+% 最后列，最后行
+% recover_I(bs+1:510,end-2:end) = decrypt_I(bs+1:510,end-2:end);
+% recover_I(510:512,bs+1:end) = decrypt_I(510:512,bs+1:end);
 
 figure(3);
 imshow(recover_I,[]);
 title('解密图像');
 
-% 计算MSE均方误差，错误率，正确率
+recover_single = recover_I(:,1:col);
+
+%% 计算MSE均方误差，错误率，正确率
+pixel = row*col;
+dif=arrayfun(@minus,int16(origin_I),int16(recover_single));
+d_dif=double(dif);
+squ_dif=power(d_dif,2);
+sum_dif=sum(squ_dif(:));
+MSE=sum_dif/pixel;
+
+index_error=find(dif(:)~=0);
+count=length(index_error);
+error_rate=count/pixel;% 错误率
+correct_rate=(pixel-count)/pixel;% 正确率
