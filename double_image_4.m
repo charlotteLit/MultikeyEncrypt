@@ -24,14 +24,10 @@ double_I = [inter_I, inter_I];
 
 [recover_I, ext_D]= decrypt(encrypt_I, bs, b, row, col);
 
+num_emd = length(emd_D);
+[MSE, PSNR, ER, BPP] = caulate(row, col, inter_I, recover_I, num_emd);
 
-[MSE, PSNR, ER, BPP] = caulate(row, col, inter_I, recover_I);
 
-check = isequal(emd_D,ext_D);
-if check == 1  
-    disp('提取数据与嵌入数据完全相同！')
-    disp(['嵌入比特数: ' num2str(num_emD) ' bits'] )
-    disp(['嵌入率: ' num2str(bpp) ' bpp'])
-else
-    disp('Warning！数据提取错误！')
-end
+disp(['嵌入比特数: ' num2str(num_emd) ' bits'] )
+disp(['嵌入率: ' num2str(BPP) ' bpp'])
+disp(['错误率: ' num2str(ER) ' bpp'])
