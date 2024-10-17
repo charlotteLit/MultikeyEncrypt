@@ -52,7 +52,7 @@ key = squeeze(rand_seq(1,:,:));
 mask(1:bs,:) = key(1:bs,:);
 mask(bs+1:row,1:bs) = key(bs+1:row,1:bs);
 % 中间列
-mask(bs+1:row,col+1:col+bs) = key(bs+1:510,col+1:col+bs);
+mask(bs+1:row,col+1:col+bs) = key(bs+1:row,col+1:col+bs);
 
 % 最后列，最后行
 % mask(bs+1:510,end-2:end) = key(bs+1:510,end-2:end);
