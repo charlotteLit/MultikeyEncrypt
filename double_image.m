@@ -13,6 +13,8 @@ double_I = [inter_I, inter_I];
 figure(1);
 imshow(double_I,[]);
 title('拼接图像');
+imwrite(uint8(double_I),'catch.png');
+
 %% 图像加密
 
 % 分块大小
@@ -29,7 +31,7 @@ D = round(rand(1,num_D)*1);
 
 % 生成2^b个随机序列，大小为两幅图片水平排列
 % 每块嵌入5 bit数据
-b = 10;
+b = 5;
 rand_num = 2^b;
 rng(b);
 rand_seq = floor(rand(rand_num, row, col*2) * 255);
@@ -64,10 +66,10 @@ for i = 2:m
     begin_x = (i-1) * bs;
     x_range = begin_x+1:begin_x+bs;
     for j = 2:n
-        ed = binary_decimal([0, 0, 0, D(d+1:d+5)]) + 1;
-        d = d + 5;
-        emd_data(emd+1:emd+5) = D(d+1:d+5);
-        emd = emd + 5;
+        ed = binary_decimal([0, 0, 0, D(d+1:d+b)]) + 1;
+        emd_data(emd+1:emd+b) = D(d+1:d+b);
+        d = d + b;
+        emd = emd + b;
         key = squeeze(rand_seq(ed, :, :));
 
         begin_y = (j-1) * bs;
@@ -85,6 +87,8 @@ encrypt_I = arrayfun(@bitxor,encrypt_I,mask);
 figure(2);
 imshow(encrypt_I,[]);
 title('加密图像2');
+imwrite(uint8(encrypt_I),'encrypt.png');
+
 %% 数据提取 & 复原图像
 
 decrypt_I = encrypt_I;
@@ -217,8 +221,8 @@ recover_I(bs+1:row,col+1:col+bs) = decrypt_I(bs+1:row,col+1:col+bs);
 figure(3);
 imshow(recover_I,[]);
 title('解密图像');
-
 recover_single = recover_I(:,1:col);
+imwrite(uint8(recover_single),'recover.png');
 
 %% 计算MSE均方误差，错误率，正确率
 pixel = row*col;
