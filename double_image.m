@@ -237,3 +237,6 @@ index_error=find(dif(:)~=0);
 count=length(index_error);
 error_rate=count/pixel;% 错误率
 correct_rate=(pixel-count)/pixel;% 正确率
+
+save('Lena_3.mat');
+
