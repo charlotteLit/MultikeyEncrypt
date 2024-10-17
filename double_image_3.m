@@ -13,7 +13,7 @@ double_I = [inter_I, inter_I];
 figure(1);
 imshow(double_I,[]);
 title('拼接图像');
-imwrite(uint8(double_I),'catch.png');
+imwrite(uint8(double_I),'catch3.png');
 
 %% 图像加密
 
@@ -87,7 +87,7 @@ encrypt_I = arrayfun(@bitxor,encrypt_I,mask);
 figure(2);
 imshow(encrypt_I,[]);
 title('加密图像2');
-imwrite(uint8(encrypt_I),'encrypt.png');
+imwrite(uint8(encrypt_I),'encrypt3.png');
 
 %% 数据提取 & 复原图像
 
@@ -222,7 +222,7 @@ figure(3);
 imshow(recover_I,[]);
 title('解密图像');
 recover_single = recover_I(:,1:col);
-imwrite(uint8(recover_single),'recover.png');
+imwrite(uint8(recover_single),'recover3.png');
 
 %% 计算MSE均方误差，错误率，正确率
 pixel = row*col;
