@@ -12,7 +12,7 @@ D = round(rand(1,num_D)*1);
 % 每块嵌入5 bit数据
 b = 5;
 
-I = imread('./测试图像/Jetplane.tiff');
+I = imread('./测试图像/Lena.tiff');
 origin_I = double(I);
 
 inter_I = origin_I(1:510,1:510);
@@ -27,9 +27,17 @@ double_I = [inter_I, inter_I];
 num_emd = length(emd_D);
 [MSE, PSNR, ER, BPP] = caulate(row, col, inter_I, recover_I, num_emd);
 
+figure(1);
+subplot(131);
+imshow(inter_I,[]);title('原始图像');
+subplot(132);
+imshow(encrypt_I,[]);title('加密图像');
+subplot(133);
+imshow(recover_I,[]);title('复原图像');
+
 
 disp(['嵌入比特数: ' num2str(num_emd) ' bits'] )
 disp(['嵌入率: ' num2str(BPP) ' bpp'])
-disp(['错误率: ' num2str(ER) ' bpp'])
+disp(['错误率: ' num2str(ER) ])
 
 

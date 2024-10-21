@@ -29,18 +29,19 @@ function [recover_single, ext_D] = new_decrypt(encrypt_I, bs, b, row, col)
     end
 
     % 现在xor_array中第一行第一列中间列已解密，其余未解密，寻找最小f
-    sum_block_l = zeros(rand_num,m,n);
-    sum_block_r = zeros(rand_num,m,n);
-    
-    for i = 2:m
-        b_x = (i-1) * bs+1;
-        e_x = bs*i;
-        for j = 2:n
-            b_y = (j-1) * bs+1;
-            e_y = bs*j;
-            b_y1 = b_y + col;
-            e_y1 = e_y + col;
-            for index = 1:rand_num
+    sum_block_min = zeros(rand_num,m,n);
+
+    for index = 1:rand_num
+        
+        for i = 2:m
+            b_x = (i-1) * bs+1;
+            e_x = bs*i;
+            for j = 2:n
+                b_y = (j-1) * bs+1;
+                e_y = bs*j;
+                b_y1 = b_y + col;
+                e_y1 = e_y + col;
+                % 块内计算
                 % 水平方向左图
                 hor_l = zeros();
                 cnt1_l = 0;
@@ -83,20 +84,20 @@ function [recover_single, ext_D] = new_decrypt(encrypt_I, bs, b, row, col)
                 for cnt = 1:cnt1_l
                     sum_l = sum_l + abs(hor_l(cnt)) + abs(ver_l(cnt));
                 end
-                sum_block_l(index,i,j) = sum_l;
+                
                 % 右图
                 sum_r = 0;
                 for cnt = 1:cnt1_r
                     sum_r = sum_r + abs(hor_r(cnt)) + abs(ver_r(cnt));
                 end
-                sum_block_r(index,i,j) = sum_r;
+                sum_block_min(index,i,j) = min(sum_l, sum_r);
             end
-            
         end
     end % end of index
 
     % 两组对照相加取最小值对应块
-    sum_block = sum_block_l + sum_block_r;
+    % sum_block = sum_block_l + sum_block_r;
+    sum_block = sum_block_min;
     [~,index]=min(sum_block,[],1);
     index = squeeze(index);
 
