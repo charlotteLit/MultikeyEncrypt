@@ -13,7 +13,7 @@ D = round(rand(1,num_D)*1);
 b = 5;
 
 %% 图像数据集信息(BOSSbase_1.01),格式:PGM,数量:10000；
-I_file_path = 'D:\ImageDatabase\BOSSbase_1.01\'; %测试图像数据集文件夹路径
+I_file_path = 'F:\BOSSbase_1.01\'; %测试图像数据集文件夹路径
 I_path_list = dir(strcat(I_file_path,'*.pgm'));  %获取该文件夹中所有pgm格式的图像
 img_num = length(I_path_list); %获取图像总数量
 %% 记录每张图像的的相关信息
