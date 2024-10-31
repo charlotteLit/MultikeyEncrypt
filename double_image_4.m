@@ -30,4 +30,4 @@ num_emd = length(emd_D);
 
 disp(['嵌入比特数: ' num2str(num_emd) ' bits'] )
 disp(['嵌入率: ' num2str(BPP) ' bpp'])
-disp(['错误率: ' num2str(ER) ' bpp'])
+disp(['错误率: ' num2str(ER)])

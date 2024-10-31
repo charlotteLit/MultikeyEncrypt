@@ -2,7 +2,7 @@ clc
 clear
 
 % 分块大小
-bs = 3;
+bs = 5;
 
 % 嵌入数据生成
 num_D = 1000000;
@@ -16,14 +16,11 @@ I = imread('./测试图像/Lena.tiff');
 origin_I = double(I);
 
 inter_I = origin_I(1:510,1:510);
-[pre_I,num_Of,Overflow] = predict_error(inter_I);
 
 [row,col] = size(inter_I);
 
-double_I = [pre_I, pre_I];
+double_I = [inter_I, inter_I];
 
-figure(1);
-imshow(double_I,[]);title('拼接图像');
 %% 加密 & 解密
 
 [encrypt_I, emd_D] = encrypt(double_I, bs, b, D, row, col);
@@ -44,10 +41,8 @@ subplot(224);
 imshow(recover_I,[]);title('复原图像');
 
 
-
-
-% disp(['嵌入比特数: ' num2str(num_emd) ' bits'] )
-% disp(['嵌入率: ' num2str(BPP) ' bpp'])
-% disp(['错误率: ' num2str(ER) ])
+disp(['嵌入比特数: ' num2str(num_emd) ' bits'] )
+disp(['嵌入率: ' num2str(BPP) ' bpp'])
+disp(['错误率: ' num2str(ER) ])
 
 
