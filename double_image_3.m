@@ -12,16 +12,15 @@ D = round(rand(1,num_D)*1);
 % 每块嵌入5 bit数据
 b = 5;
 
-I = imread('./测试图像/Lena.tiff');
+I = imread('./测试图像/Airplane.tiff');
 origin_I = double(I);
 
 inter_I = origin_I(1:510,1:510);
+% inter_I = origin_I;
 
 [row,col] = size(inter_I);
 
 double_I = [inter_I, inter_I];
-
-%% 加密 & 解密
 
 [encrypt_I, emd_D] = encrypt(double_I, bs, b, D, row, col);
 
@@ -30,19 +29,18 @@ double_I = [inter_I, inter_I];
 num_emd = length(emd_D);
 [MSE, PSNR, ER, BPP] = caulate(row, col, inter_I, recover_I, num_emd);
 
-figure(1);
-subplot(221);
-imshow(inter_I,[]);title('原始图像');
-subplot(222);
-imshow(double_I,[]);title('拼接图像');
-subplot(223);
-imshow(encrypt_I,[]);title('加密图像');
-subplot(224);
-imshow(recover_I,[]);title('复原图像');
-
+% figure(1);
+% subplot(131);
+% imshow(inter_I,[]);title('原始图像');
+% subplot(132);
+% imshow(encrypt_I,[]);title('加密图像');
+% subplot(133);
+% imshow(recover_I,[]);title('复原图像');
+% 
+% figure(2);
+% imshow(recover_I,[]);title('复原图像');
 
 disp(['嵌入比特数: ' num2str(num_emd) ' bits'] )
 disp(['嵌入率: ' num2str(BPP) ' bpp'])
-disp(['错误率: ' num2str(ER) ])
-
-
+disp(['错误率: ' num2str(ER*100) ' %'])
+disp(['正确率：' num2str((1-ER)*100) ' %'])
