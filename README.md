@@ -1,5 +1,15 @@
 # MultikeyEncrypt
 Reversible Information Hiding Algorithm Based on Multikey Encryption
 
-### ¶àÃÜÔ¿¼ÓÃÜ
-·Ö³ÉÁ½·ùÍ¼Æ¬£¬·Ö±ğ½âÃÜ£¬Ïà»¥ÑéÖ¤£¬Ìá¸ß×¼È·ÂÊ
+### å¤šå¯†é’¥åŠ å¯†
+åˆ†æˆä¸¤å¹…å›¾ç‰‡ï¼Œåˆ†åˆ«è§£å¯†ï¼Œç›¸äº’éªŒè¯ï¼Œæé«˜å‡†ç¡®ç‡
+
+
+### new_decrypt error rate(%)
+blcok size | 3*3 | 4*4 | 5*5 
+:----: | :----: | :----: | :----:
+Airplane | 0 | 0 | 0
+Baboon | 0.0796 | 0 | 0
+Jetplane | 0.0104 | 0 | 0
+Lena | 0.0035 | 0 | 0
+Tiffany | 0 | 0 | 0 
