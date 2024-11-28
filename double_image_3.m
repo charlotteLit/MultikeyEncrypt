@@ -10,9 +10,9 @@ rng(0);
 D = round(rand(1,num_D)*1);
 
 % Ã¿¿éÇ¶Èë5 bitÊı¾İ
-b = 5;
+b = 10;
 
-I = imread('./²âÊÔÍ¼Ïñ/Airplane.tiff');
+I = imread('./²âÊÔÍ¼Ïñ/Lena.tiff');
 origin_I = double(I);
 
 inter_I = origin_I(1:510,1:510);
