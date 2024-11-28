@@ -12,35 +12,35 @@ D = round(rand(1,num_D)*1);
 % 每块嵌入5 bit数据
 b = 10;
 
-I = imread('./测试图像/Lena.tiff');
-origin_I = double(I);
+%% 图像数据集信息
+I_file_path = '.\测试图像\'; %测试图像数据集文件夹路径
+I_path_list = dir(strcat(I_file_path,'*.tiff'));  %获取该文件夹中所有pgm格式的图像
+img_num = length(I_path_list); %获取图像总数量
 
-inter_I = origin_I(1:510,1:510);
-% inter_I = origin_I;
+%% 运行信息
+for i=1:img_num
+    %-------------------------------读取图像-------------------------------%
+    I_name = I_path_list(i).name; %图像名
+    I = imread(strcat(I_file_path,I_name));%读取图像
+    origin_I = double(I);
 
-[row,col] = size(inter_I);
+    inter_I = origin_I(1:510,1:510);
+    % inter_I = origin_I;
 
-double_I = [inter_I, inter_I];
+    [row,col] = size(inter_I);
 
-[encrypt_I, emd_D] = encrypt(double_I, bs, b, D, row, col);
+    double_I = [inter_I, inter_I];
 
-[recover_I, ext_D]= new_decrypt(encrypt_I, bs, b, row, col);
+    [encrypt_I, emd_D] = encrypt(double_I, bs, b, D, row, col);
 
-num_emd = length(emd_D);
-[MSE, PSNR, ER, BPP] = caulate(row, col, inter_I, recover_I, num_emd);
+    [recover_I, ext_D]= new_decrypt(encrypt_I, bs, b, row, col);
 
-% figure(1);
-% subplot(131);
-% imshow(inter_I,[]);title('原始图像');
-% subplot(132);
-% imshow(encrypt_I,[]);title('加密图像');
-% subplot(133);
-% imshow(recover_I,[]);title('复原图像');
-% 
-% figure(2);
-% imshow(recover_I,[]);title('复原图像');
+    num_emd = length(emd_D);
+    [MSE, PSNR, ER, BPP] = caulate(row, col, inter_I, recover_I, num_emd);
 
-disp(['嵌入比特数: ' num2str(num_emd) ' bits'] )
-disp(['嵌入率: ' num2str(BPP) ' bpp'])
-disp(['错误率: ' num2str(ER*100) ' %'])
-disp(['正确率：' num2str((1-ER)*100) ' %'])
+    disp(['image:' I_name])
+    disp(['嵌入比特数: ' num2str(num_emd) ' bits'] )
+    disp(['嵌入率: ' num2str(BPP) ' bpp'])
+    disp(['错误率: ' num2str(ER*100) ' %'])
+    
+end
