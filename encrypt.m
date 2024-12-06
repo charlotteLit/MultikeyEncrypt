@@ -1,7 +1,7 @@
 function [encrypt_I, emd_data] = encrypt(double_I, bs, b, D, row, col)
 
     rand_num = 2^b;
-    rng(b);
+    rng(5);
     rand_seq = floor(rand(rand_num, row, col*2) * 255);
 
     % 隐藏信息标记

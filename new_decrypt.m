@@ -1,7 +1,7 @@
 function [recover_single, ext_D] = new_decrypt(encrypt_I, bs, b, row, col)
 
     rand_num = 2^b;
-    rng(b);
+    rng(5);
     rand_seq = floor(rand(rand_num, row, col*2) * 255);
 
     % ·Ö¿éÊý
@@ -119,7 +119,7 @@ function [recover_single, ext_D] = new_decrypt(encrypt_I, bs, b, row, col)
             y_range = begin_y+1:begin_y+bs;
             y1_range = begin_y1+1:begin_y1+bs; 
             ind = final_index(i,j);
-            extract = decimal_binary(ind-1);
+            extract = decimal_binary(ind-1, b);
             ext_D(ed+1:ed+b) = extract(1:b);
             ed = ed + b;
             key = squeeze(rand_seq(ind,:,:));
